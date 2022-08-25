@@ -1,12 +1,21 @@
+import { useEffect, useState } from "react"
 import {Card, Container, Row, Col, Image} from "react-bootstrap"
 import anya from "../assets/img/anya.jpg"
-import doraemon from "../assets/img/doraemon.jpg"
-import moana from "../assets/img/moana.jpg"
-import spiderman from "../assets/img/spiderman.jpg"
-import pengabdisetan from "../assets/img/pengabdisetan.jpg"
-import sneakerella from "../assets/img/sneakerella.jpg"
+import axios from "axios"
 
 const Trending = () => {
+
+    const [movies, setMovies] = useState([])
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_BASE_URL}/discover/movie`, {
+            params: {
+                api_key: process.env.REACT_APP_TMDB_KEY
+            }
+        }).then((response) => {
+            setMovies(response.data.results)
+        })
+    }, [])
+
     return (
         <div>
             <Container>
@@ -14,96 +23,22 @@ const Trending = () => {
                 <h1 className="text-white">TRENDING MOVIES</h1>
                 <br />
                 <Row>
-                    <Col md={4} className="movieWrapper" id="trending">
-                        <Card className="movieImage">
-                            <Image src={anya} alt="SPY X FAMILY Movies" className="images"/>
-                            <div className="bg-dark">
-                            <div className="p-2 m-1 text-white">
-                                <Card.Title className="text-center">SPY X FAMILY</Card.Title>
-                                <Card.Text className="text-left">
-                                This is a wider card with supporting text below as a natural lead-in
-                                to additional content.
-                                </Card.Text>
-                                <Card.Text className="text-left">Last updated 3 mins ago</Card.Text>
-                            </div>
-                            </div>
-                        </Card>
-                    </Col>
-                    <Col md={4} className="movieWrapper">
-                        <Card className="movieImage">
-                            <Image src={doraemon} alt="Doraemon Movies" className="images"/>
-                            <div className="bg-dark">
-                            <div className="p-2 m-1 text-white">
-                                <Card.Title className="text-center">DORAEMON</Card.Title>
-                                <Card.Text className="text-left">
-                                This is a wider card with supporting text below as a natural lead-in
-                                to additional content.
-                                </Card.Text>
-                                <Card.Text className="text-left">Last updated 3 mins ago</Card.Text>
-                            </div>
-                            </div>
-                        </Card>
-                    </Col>
-                    <Col md={4} className="movieWrapper">
-                        <Card className="movieImage">
-                            <Image src={moana} alt="Moana Movies" className="images"/>
-                            <div className="bg-dark">
-                            <div className="p-2 m-1 text-white">
-                                <Card.Title className="text-center">MOANA</Card.Title>
-                                <Card.Text className="text-left">
-                                This is a wider card with supporting text below as a natural lead-in
-                                to additional content.
-                                </Card.Text>
-                                <Card.Text className="text-left">Last updated 3 mins ago</Card.Text>
-                            </div>
-                            </div>
-                        </Card>
-                    </Col>
-                    <Col md={4} className="movieWrapper">
-                        <Card className="movieImage">
-                            <Image src={sneakerella} alt="Sneakerella Movies" className="images"/>
-                            <div className="bg-dark">
-                            <div className="p-2 m-1 text-white">
-                                <Card.Title className="text-center">SNEAKERELLA</Card.Title>
-                                <Card.Text className="text-left">
-                                This is a wider card with supporting text below as a natural lead-in
-                                to additional content.
-                                </Card.Text>
-                                <Card.Text className="text-left">Last updated 3 mins ago</Card.Text>
-                            </div>
-                            </div>
-                        </Card>
-                    </Col>
-                    <Col md={4} className="movieWrapper">
-                        <Card className="movieImage">
-                            <Image src={spiderman} alt="Spiderman Movies" className="images"/>
-                            <div className="bg-dark">
-                            <div className="p-2 m-1 text-white">
-                                <Card.Title className="text-center">SPIDERMAN</Card.Title>
-                                <Card.Text className="text-left">
-                                This is a wider card with supporting text below as a natural lead-in
-                                to additional content.
-                                </Card.Text>
-                                <Card.Text className="text-left">Last updated 3 mins ago</Card.Text>
-                            </div>
-                            </div>
-                        </Card>
-                    </Col>
-                    <Col md={4} className="movieWrapper">
-                        <Card className="movieImage">
-                            <Image src={pengabdisetan} alt="Pengabdi Setan Movies" className="images"/>
-                            <div className="bg-dark">
-                            <div className="p-2 m-1 text-white">
-                                <Card.Title className="text-center">PENGABDI SETAN</Card.Title>
-                                <Card.Text className="text-left">
-                                This is a wider card with supporting text below as a natural lead-in
-                                to additional content.
-                                </Card.Text>
-                                <Card.Text className="text-left">Last updated 3 mins ago</Card.Text>
-                            </div>
-                            </div>
-                        </Card>
-                    </Col>
+                    {movies.map((result, index) => {
+                        return (
+                            <Col md={4} className="movieWrapper" id="trending" key={index}>
+                                <Card className="movieImage">
+                                    <Image src={`${process.env.REACT_APP_IMG_URL}/${result.poster_path}`} alt="SPY X FAMILY Movies" className="images"/>
+                                    <div className="bg-dark">
+                                    <div className="p-2 m-1 text-white">
+                                        <Card.Title className="text-center">{result.title}</Card.Title>
+                                        <Card.Text className="text-left">{result.overview}</Card.Text>
+                                        <Card.Text className="text-left">{result.release_date}</Card.Text>
+                                    </div>
+                                    </div>
+                                </Card>
+                            </Col>
+                        )
+                    })}
                 </Row>
             </Container>
         </div>
